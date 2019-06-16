@@ -1,2 +1,2 @@
 # TrayTemplate
-Empty Windows notification tray application 
+Empty Windows notification tray application in C#
