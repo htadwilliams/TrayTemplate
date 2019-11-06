@@ -4,24 +4,18 @@ using System.Windows.Forms;
 
 namespace TrayTemplate
 {
-    class TrayApplicationContext : ApplicationContext
+    class TrayApplicationContext<T> : ApplicationContext where T : Form, new()
     {
-        public Container Container { get => this.container; set => this.container = value; }
-        public NotifyIcon NotifyIcon { get => this.notifyIcon; set => this.notifyIcon = value; }
-        public Form Form { get => this.form; set => this.form = value; }
-
-        private Container container;
-        private NotifyIcon notifyIcon;
-
-        // Can't use ApplicationContext's MainForm property because if it't closed, it ends the application!
-        private Form form = new TrayTemplateForm();
+        public Container Container { get; set; }
+        public NotifyIcon NotifyIcon { get; set; }
+        public T Form { get; set; }
 
         public void ShowForm()
         {
             // Created on first show, and optionally if form has been closed to save resources
             if (Form == null || Form.IsDisposed)
             {
-                Form = new TrayTemplateForm();
+                Form = new T();
             }
             Form.Show();
         }
@@ -34,7 +28,7 @@ namespace TrayTemplate
         private void InitializeContext()
         {
             Container = new System.ComponentModel.Container();
-            NotifyIcon = new NotifyIcon(container)
+            NotifyIcon = new NotifyIcon(Container)
             {
                 ContextMenuStrip = new ContextMenuStrip(),
                 Icon = TrayTemplate.Properties.Resources.TrayTemplate,
@@ -45,10 +39,10 @@ namespace TrayTemplate
             NotifyIcon.ContextMenuStrip.Opening += ContextMenuStrip_Opening;
             NotifyIcon.DoubleClick += NotifyIcon_DoubleClick;
 
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem("&Show Winow", null, ShowWindow_Click));
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem("&About Tray Template", null, HelpAbout_Click));
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem("E&xit", null, Exit_Click));
+            NotifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem("&Show Winow", null, ShowWindow_Click));
+            NotifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem("&About Tray Template", null, HelpAbout_Click));
+            NotifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            NotifyIcon.ContextMenuStrip.Items.Add(new ToolStripMenuItem("E&xit", null, Exit_Click));
 
             ShowForm();
         }
@@ -65,9 +59,9 @@ namespace TrayTemplate
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && container != null) 
+            if (disposing && Container != null) 
             { 
-                container.Dispose(); 
+                Container.Dispose(); 
             }
         }
 
@@ -79,7 +73,7 @@ namespace TrayTemplate
             }
 
             // should remove lingering tray icon
-            notifyIcon.Visible = false; 
+            NotifyIcon.Visible = false; 
 
             base.ExitThreadCore();
         }
@@ -97,7 +91,7 @@ namespace TrayTemplate
 
         private void ContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            // TODO customize context menu strip here if needed
+            // TODO customize context menu strip here
             e.Cancel = false;
         }
     }

@@ -14,7 +14,7 @@ namespace TrayTemplate
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            ApplicationContext applicationContext = new TrayApplicationContext(); 
+            ApplicationContext applicationContext = new TrayApplicationContext<TrayTemplateMainForm>(); 
             Application.Run(applicationContext);
         }
     }

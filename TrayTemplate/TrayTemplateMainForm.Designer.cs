@@ -2,7 +2,7 @@
 
 namespace TrayTemplate
 {
-    partial class TrayTemplateForm
+    partial class TrayTemplateMainForm
     {
         /// <summary>
         /// Required designer variable.
